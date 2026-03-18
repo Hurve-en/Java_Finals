@@ -13,11 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
+    // Entry point for the ticket sale simulation; wires user input to the core classes.
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== ConcertRush - Stadium Ticket Booking Simulation ===\n");
 
+        // Basic configuration gathered from the user.
         System.out.print("Enter total seats available: ");
         int totalSeats = scanner.nextInt();
 
@@ -29,30 +31,30 @@ public class Main {
 
         System.out.println("\nStarting ticket sale simulation...\n");
 
-        // Create shared stadium (Singleton)
+        // Build the single shared stadium that holds all seats and booking logic.
         Stadium stadium = Stadium.getInstance(totalSeats);
 
-        // Create fans using factory
+        // Create a mix of VIP and regular fans using the factory helper.
         List<Fan> fans = FanFactory.createFans(totalFans, stadium);
 
-        // Progress reporter thread
+        // Launch a background reporter to print progress while fans compete.
         ProgressReporter reporter = new ProgressReporter(stadium, fans.size());
         Thread reporterThread = new Thread(reporter, "Progress-Reporter");
         reporterThread.setDaemon(true);
         reporterThread.start();
 
-        // Start timing
+        // Start timing to show how long the simulation runs.
         long startTime = System.currentTimeMillis();
 
-        // Thread pool
+        // Fixed thread pool to simulate concurrent buyers.
         ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
 
-        // Submit all fan tasks
+        // Submit every fan as a separate task to the pool.
         for (Fan fan : fans) {
             executor.submit(fan);
         }
 
-        // Shutdown and wait
+        // Stop accepting new tasks and wait for all fans to finish (with a timeout).
         executor.shutdown();
         try {
             if (!executor.awaitTermination(90, TimeUnit.SECONDS)) {
@@ -63,7 +65,7 @@ public class Main {
             Thread.currentThread().interrupt();
         }
 
-        // Stop reporter
+        // Stop reporter once booking is done.
         reporter.stop();
 
         long endTime = System.currentTimeMillis();

@@ -2,6 +2,7 @@ package concert.entity;
 
 import concert.model.Stadium;
 
+// VIP fan with a slightly more persistent retry strategy.
 public class VipFan extends Fan {
 
     public VipFan(String name, Stadium stadium) {

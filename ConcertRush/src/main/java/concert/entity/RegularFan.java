@@ -10,7 +10,7 @@ public class RegularFan extends Fan {
 
     @Override
     protected boolean attemptToBook() {
-        // Regular fans try only once
+        // Regular fans try only once; if seat is gone they give up.
         return stadium.tryBookSeat(name);
     }
 }

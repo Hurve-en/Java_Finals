@@ -1,5 +1,6 @@
 package concert.model;
 
+// Represents a single seat in the stadium with a section/number label.
 public class Seat {
 
     private final String section;
@@ -11,6 +12,7 @@ public class Seat {
         this.number = number;
     }
 
+    // Synchronized so only one fan can grab the seat at a time.
     public synchronized boolean book() {
         if (!booked) {
             booked = true;

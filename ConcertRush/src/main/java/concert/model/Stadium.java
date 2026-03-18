@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// Thread-safe singleton representing the venue; owns seats and booking logs.
 public class Stadium {
 
     private static Stadium instance;
@@ -15,7 +16,7 @@ public class Stadium {
     private final AtomicInteger soldCount = new AtomicInteger(0);
 
     private Stadium(int totalSeats) {
-        // Simple seat layout: A1–A20, B1–B20, ...
+        // Simple seat layout: A1–A20, B1–B20, ... until the requested count is reached.
         char section = 'A';
         int count = 0;
         while (count < totalSeats) {
@@ -34,7 +35,7 @@ public class Stadium {
     }
 
     public boolean tryBookSeat(String fanName) {
-        // We shuffle a bit to simulate realistic random choice
+        // Shuffle to mimic random seat selection across fans.
         Collections.shuffle(seats);
 
         for (Seat seat : seats) {

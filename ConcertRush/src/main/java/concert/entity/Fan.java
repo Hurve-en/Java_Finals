@@ -7,6 +7,7 @@ public abstract class Fan implements Runnable {
     protected final String name;
     protected final Stadium stadium;
 
+    // Base class shared by all fan types; each fan knows its name and the stadium to book from.
     public Fan(String name, Stadium stadium) {
         this.name = name;
         this.stadium = stadium;
@@ -14,6 +15,7 @@ public abstract class Fan implements Runnable {
 
     @Override
     public void run() {
+        // Each fan will try to book according to its specialized strategy.
         System.out.printf("%s started trying to book...%n", name);
         boolean success = attemptToBook();
         if (success) {
@@ -23,6 +25,7 @@ public abstract class Fan implements Runnable {
         }
     }
 
+    // Implemented by subclasses to define how aggressively they retry.
     protected abstract boolean attemptToBook();
 
     public String getName() {
