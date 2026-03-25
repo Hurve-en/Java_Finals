@@ -16,7 +16,7 @@ public class FanFactory {
     public static List<Fan> createFans(int count, Stadium stadium) {
         List<Fan> fans = new ArrayList<>();
 
-        int vipCount = count / 5; // ~20% VIP fans
+        int vipCount = count / 5; // about 20% VIPs
 
         for (int i = 1; i <= count; i++) {
             String name;

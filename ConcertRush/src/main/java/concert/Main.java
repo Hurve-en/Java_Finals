@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    // Entry point for the ticket sale simulation; wires user input to the core classes.
+    // Starts the ticket sale simulation and connects the pieces together.
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== ConcertRush - Stadium Ticket Booking Simulation ===\n");
 
-        // Basic configuration gathered from the user.
+        // Get the basic setup from the user.
         System.out.print("Enter total seats available: ");
         int totalSeats = scanner.nextInt();
 
@@ -31,30 +31,30 @@ public class Main {
 
         System.out.println("\nStarting ticket sale simulation...\n");
 
-        // Build the single shared stadium that holds all seats and booking logic.
+        // Shared stadium that owns all seats and booking rules.
         Stadium stadium = Stadium.getInstance(totalSeats);
 
-        // Create a mix of VIP and regular fans using the factory helper.
+        // Create a mix of VIP and regular fans.
         List<Fan> fans = FanFactory.createFans(totalFans, stadium);
 
-        // Launch a background reporter to print progress while fans compete.
+        // Background progress printer.
         ProgressReporter reporter = new ProgressReporter(stadium, fans.size());
         Thread reporterThread = new Thread(reporter, "Progress-Reporter");
         reporterThread.setDaemon(true);
         reporterThread.start();
 
-        // Start timing to show how long the simulation runs.
+        // Track how long the run takes.
         long startTime = System.currentTimeMillis();
 
-        // Fixed thread pool to simulate concurrent buyers.
+        // Thread pool to run fans in parallel.
         ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
 
-        // Submit every fan as a separate task to the pool.
+        // Submit each fan.
         for (Fan fan : fans) {
             executor.submit(fan);
         }
 
-        // Stop accepting new tasks and wait for all fans to finish (with a timeout).
+        // Stop accepting new tasks and wait for all fans to finish.
         executor.shutdown();
         try {
             if (!executor.awaitTermination(90, TimeUnit.SECONDS)) {
@@ -65,7 +65,7 @@ public class Main {
             Thread.currentThread().interrupt();
         }
 
-        // Stop reporter once booking is done.
+        // Stop the reporter once booking is done.
         reporter.stop();
 
         long endTime = System.currentTimeMillis();

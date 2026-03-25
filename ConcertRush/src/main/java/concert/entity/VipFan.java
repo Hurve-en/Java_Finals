@@ -2,7 +2,7 @@ package concert.entity;
 
 import concert.model.Stadium;
 
-// VIP fan with a slightly more persistent retry strategy.
+// VIP fan that retries a few times.
 public class VipFan extends Fan {
 
     public VipFan(String name, Stadium stadium) {
@@ -11,12 +11,12 @@ public class VipFan extends Fan {
 
     @Override
     protected boolean attemptToBook() {
-        // VIP fans try up to 3 times (simulate priority / faster retries)
+        // Tries up to three times.
         for (int attempt = 1; attempt <= 3; attempt++) {
             if (stadium.tryBookSeat(name)) {
                 return true;
             }
-            // tiny delay to simulate thinking / retry
+            // Small pause between attempts.
             try {
                 Thread.sleep(5);
             } catch (InterruptedException ignored) {

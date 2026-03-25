@@ -1,6 +1,6 @@
 package concert.model;
 
-// Simple value object describing which fan got which seat.
+// Notes which fan got which seat.
 public class Ticket {
 
     private final String seatLabel;
